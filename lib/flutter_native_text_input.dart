@@ -307,10 +307,14 @@ class _NativeTextInputState extends State<NativeTextInput> {
   }
 
   Future<void> _controllerListener() async {
+    final text = widget.controller?.text ?? '';
+    if (text == _effectiveController.text && text.isNotEmpty) {
+      return;
+    }
     final MethodChannel channel = await _channel.future;
     channel.invokeMethod(
       "setText",
-      {"text": widget.controller?.text ?? ''},
+      {"text": text},
     );
     channel.invokeMethod("getContentHeight").then((value) {
       if (value != null && value != _contentHeight) {
